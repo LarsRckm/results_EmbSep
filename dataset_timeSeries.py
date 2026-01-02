@@ -74,8 +74,7 @@ class TimeSeriesDataset_Interpolation_roundedInput(Dataset):
             "interpolation_noisy_TimeSeries": encoder_input_removed,
             "groundTruth": decoder_input,
             "noise_std": noise_std,
-            "groundTruth_indices": decoder_input_copy_rounded,
-            "mask": mask
+            "groundTruth_indices": decoder_input_copy_rounded
         }
 
 # #vector: vector indicating which value does not exist (1) and which values exist (0)
