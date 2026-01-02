@@ -69,7 +69,8 @@ def run_validation_TimeSeries(model,validation_dl, device, num_examples, config,
                 break
 
 def greedy_decode_timeSeries_paper(model, source: torch.Tensor):
-    encoder_output = model.encode(source, None)
+    time = torch.linspace(0, 1, steps=1000).unsqueeze(0)
+    encoder_output = model.encode(source, None, time)
     
     proj_out = model.project(encoder_output[0,:])           #(seq_len, d_model) -> (seq_len, vocab_size)
 
@@ -207,14 +208,14 @@ def train_model_TimeSeries_paper(config):
             # Run validation at the end of every epoch
             run_validation_TimeSeries(model, val_dataloader, device, 4, config, epoch)
             
-        #save the model at the end of every epoch
-        model_filename = get_weights_file_path(config, f"{epoch:02d}")
-        torch.save({
-            "epoch": epoch,
-            "model_state_dict": model.state_dict(),
-            "optimizer_state_dict": optimizer.state_dict(),
-            "global_step": global_step
-        }, model_filename)
+            #save the model at the end of every epoch
+            model_filename = get_weights_file_path(config, f"{epoch:02d}")
+            torch.save({
+                "epoch": epoch,
+                "model_state_dict": model.state_dict(),
+                "optimizer_state_dict": optimizer.state_dict(),
+                "global_step": global_step
+            }, model_filename)
    
 
 if __name__ == "__main__":
