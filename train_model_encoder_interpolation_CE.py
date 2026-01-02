@@ -174,18 +174,19 @@ def train_model_TimeSeries_paper(config):
             # Erwartungswert: pred_value[b,s] = sum_v probs[b,s,v] * i2v_values[v]
             pred_value = (probs * i2v.view(1,1,-1)).sum(dim=-1)   # (B,S)
 
-            pred_value = pred_value * div_term.unsqueeze(-1) + min_value.unsqueeze(-1)
+            # pred_value = pred_value * div_term.unsqueeze(-1) + min_value.unsqueeze(-1)
             prediction_grad = pred_value[:, 1:] - pred_value[:, :-1]
 
             groundTruth = batch["groundTruth"].to(device)
-            groundTruth = groundTruth * div_term.unsqueeze(-1) + min_value.unsqueeze(-1)
+            # groundTruth = groundTruth * div_term.unsqueeze(-1) + min_value.unsqueeze(-1)
             groundTruth_grad = groundTruth[:,1:] - groundTruth[:,:-1]
 
 
             nom = torch.abs(prediction_grad - groundTruth_grad).sum()
             denom = torch.abs(groundTruth_grad).sum() + 1e-6
 
-            lossGradient = nom/denom
+            # lossGradient = nom/denom
+            lossGradient = nom
             loss = lossCE + config["gradient_loss_weight"] * lossGradient
             batch_iterator.set_postfix({f"loss": f"{loss.item():6.5f}; lossCE: {lossCE.item():6.3f}; lossGrad: {lossGradient.item():6.3f}"})
 
